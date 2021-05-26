@@ -57,13 +57,12 @@ if ! v.db.connect -c map=$map layer=$layer | grep '|enode$' > /dev/null; then
 fi
 
 if [ $populate -eq 1 ]; then
-	echo "Populating node information..." >&2
-
-	echo "Adding columns to map=$map layer=$layer: sx, sy, ex, ey, snode, enode" >&2
+	echo "Adding columns to map=$map layer=$layer: sx, sy, ex, ey, snode, enode..." >&2
 	v.to.db map=$map layer=$layer op=start col=sx,sy --o
 	v.to.db map=$map layer=$layer op=end col=ex,ey --o
 	v.db.addcolumn map=$map layer=$layer col="snode int, enode int"
 
+	echo "Populating start node information..." >&2
 	for i in $(v.db.select -c map=$map layer=$layer col=cat,sx,sy sep=,); do
 		cat=$(echo $i | cut -d, -f1)
 		coor=$(echo $i | cut -d, -f2-3)
@@ -71,6 +70,7 @@ if [ $populate -eq 1 ]; then
 		v.db.update map=$map layer=$layer col=snode value=$snode where=cat=$cat
 	done
 
+	echo "Populating end node information..." >&2
 	for i in $(v.db.select -c map=$map layer=$layer col=cat,ex,ey sep=,); do
 		cat=$(echo $i | cut -d, -f1)
 		coor=$(echo $i | cut -d, -f2-3)
