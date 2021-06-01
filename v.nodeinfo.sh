@@ -29,7 +29,7 @@
 #% key: nodes
 #% type: integer
 #% description: Node IDs
-# multiple: yes
+#% multiple: yes
 #%end
 
 if [ -z "$GISBASE" ]; then
